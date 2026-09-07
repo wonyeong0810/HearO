@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  개발 중에만 쓰는 예외. 로컬 백엔드는 http 로 뜨는데 Android 9(API 28) 부터는
+  평문 HTTP 가 기본 차단이라, 이게 없으면 에뮬레이터에서 로그인부터 실패한다.
+
+  이 파일은 src/debug/ 에만 있다. 릴리스 빌드에는 병합되지 않으므로 운영에서는
+  여전히 https/wss 만 통한다 - 개발 편의 때문에 배포 보안을 여는 일은 없다.
+
+  허용 대상은 개발 기기가 실제로 닿는 곳으로만 한정한다. 와일드카드는 쓰지
+  않는다 - 디버그 빌드를 들고 카페 와이파이에 붙었을 때 아무 평문 서버에나
+  붙게 되면 곤란하다.
+
+    10.0.2.2   Android 에뮬레이터가 보는 호스트 PC
+    localhost / 127.0.0.1
+               기기 자신. `adb reverse tcp:8000 tcp:8000` 로 USB 터널을 쓸 때.
+    *.ts.net   Tailscale MagicDNS. 무선으로 개발 PC 에 붙을 때 쓴다.
+               tailnet 안의 기기만 이 이름을 풀 수 있고, 밖에서는 닿지 않는다.
+    100.74.149.97
+               같은 PC 의 Tailscale IP. MagicDNS 가 꺼져 있어도 되게 함께 둔다.
+               PC 를 바꾸거나 tailnet 을 다시 만들면 이 값이 바뀐다
+               (`tailscale ip -4` 로 확인).
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="true">ts.net</domain>
+        <domain includeSubdomains="false">100.74.149.97</domain>
+    </domain-config>
+</network-security-config>

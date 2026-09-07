@@ -1,0 +1,96 @@
+name: hearo
+description: 감정이 담긴 실시간 자막으로 청각장애인의 일상 소통을 돕는 보조 앱
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # ---- 상태관리 / 라우팅 ----
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.6.1
+
+  # 모델은 코드 생성 없이 직접 작성한다. 빌드 단계가 하나 줄고, JSON 매핑이
+  # 눈에 보이는 코드로 남아 백엔드 계약이 바뀌었을 때 추적하기 쉽다.
+
+  # ---- 네트워크 ----
+  dio: ^5.7.0
+  web_socket_channel: ^3.0.1
+  connectivity_plus: ^6.1.0
+
+  # ---- 오디오 ----
+  # 마이크 PCM 스트림. 백엔드로 보낼 24kHz mono PCM16 을 직접 뽑는다.
+  record: ^7.1.1
+  # 온디바이스 경보음 감지 추론 (직접 학습시킨 ONNX 모델).
+  # iOS 16 / macOS 14 이상을 요구한다 — assets/models/README.md 참고.
+  flutter_onnxruntime: ^1.8.3
+
+  # ---- 기기 기능 ----
+  permission_handler: ^11.3.1
+  vibration: ^2.0.0
+  flutter_local_notifications: ^18.0.1
+  torch_light: ^1.1.0
+  wakelock_plus: ^1.2.8
+  # 백그라운드에서도 경보 감지를 유지하기 위한 포그라운드 서비스
+  flutter_foreground_task: ^8.10.4
+
+  # ---- 로컬 저장 ----
+  # 토큰은 Keychain/Keystore 에, 나머지 설정은 SharedPreferences 에 둔다.
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.3
+  path_provider: ^2.1.5
+  path: ^1.9.0
+
+  # ---- 위치 (선택 기능, 설정에서 켠 경우만) ----
+  geolocator: ^13.0.2
+
+  # ---- UI ----
+  intl: ^0.20.2
+  collection: ^1.18.0
+  just_audio: ^0.10.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # 기기에서 실제 ONNX 모델을 돌려 확인한다 (integration_test/ 참고).
+  # 네이티브 라이브러리라 호스트 `flutter test` 로는 검증할 수 없다.
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    # 경보음 감지 모델(약 21MB)과 메타데이터.
+    # 다시 만드는 방법은 assets/models/README.md 참고.
+    - assets/models/
+    - assets/demo/
+
+  # 한국어 자막은 굵기 대비가 커야 저시력 사용자가 구분하기 쉽다.
+  # Pretendard 를 쓰면 가독성이 눈에 띄게 좋아지지만, 폰트 파일은 저장소에
+  # 포함하지 않는다(용량·라이선스 고지). 없으면 시스템 기본 글꼴로 대체되며
+  # 앱은 정상 동작한다.
+  #
+  # 적용하려면: assets/models/README.md 의 폰트 절을 따라 파일을 넣은 뒤
+  # 아래 주석을 해제하세요.
+  #
+  # fonts:
+  #   - family: Pretendard
+  #     fonts:
+  #       - asset: assets/fonts/Pretendard-Regular.otf
+  #         weight: 400
+  #       - asset: assets/fonts/Pretendard-Medium.otf
+  #         weight: 500
+  #       - asset: assets/fonts/Pretendard-Bold.otf
+  #         weight: 700
+  #       - asset: assets/fonts/Pretendard-ExtraBold.otf
+  #         weight: 800

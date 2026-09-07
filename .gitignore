@@ -1,0 +1,62 @@
+# ---- secrets ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+firebase-service-account*.json
+google-services.json
+GoogleService-Info.plist
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+.coverage.*
+dist/
+build/
+
+# ---- flutter / dart ----
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/.packages
+app/build/
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/Flutter.framework/
+app/ios/Flutter/Flutter.podspec
+app/ios/Flutter/Generated.xcconfig
+app/ios/Flutter/flutter_export_environment.sh
+app/android/.gradle/
+app/android/local.properties
+app/android/key.properties
+app/android/app/*.jks
+app/macos/Pods/
+*.iml
+
+# ---- editors / os ----
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# ---- runtime artifacts ----
+*.log
+/tmp/
+backend/.uploads/
+
+# 체험 모드 대본은 각자 기기에만 둔다 (assets/demo/README.md)
+app/assets/demo/script.json
+
+# ---- claude code (로컬 설정) ----
+.claude/

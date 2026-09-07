@@ -1,0 +1,37 @@
+{
+  "class_names": [
+    "background",
+    "fire_alarm",
+    "civil_defense_siren",
+    "emergency_vehicle_siren",
+    "general_alarm"
+  ],
+  "display_names_ko": {
+    "background": "일반 환경음",
+    "fire_alarm": "화재경보",
+    "civil_defense_siren": "민방위·재난경보",
+    "emergency_vehicle_siren": "긴급차량 사이렌",
+    "general_alarm": "일반 경보"
+  },
+  "input": {
+    "sample_rate": 32000,
+    "channels": 1,
+    "clip_seconds": 4.0,
+    "n_mels": 128,
+    "n_fft": 1024,
+    "win_length": 800,
+    "hop_length": 320,
+    "f_min": 0,
+    "f_max": 15000,
+    "preemphasis": 0.97,
+    "normalization": "(ln(mel_power + 1e-5) + 4.5) / 5.0"
+  },
+  "outputs": "raw logits; apply softmax and class-specific thresholds",
+  "logit_biases": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}

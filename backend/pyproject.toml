@@ -1,0 +1,122 @@
+[project]
+name = "hearo-backend"
+version = "1.0.0"
+description = "HearO — 감정이 담긴 실시간 자막으로 청각장애인의 일상 소통을 돕는 보조 앱의 백엔드"
+requires-python = ">=3.12"
+# readme 를 두지 않는다. 저장소 README 는 이 디렉터리 밖에 있는데, hatchling 은
+# 프로젝트 바깥 경로를 거부해서 `pip install -e .` 가 통째로 실패한다
+# ("Readme path must be within the project directory"). 배포하는 패키지가
+# 아니므로 메타데이터에 README 가 필요하지 않다.
+
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "email-validator>=2.2.0",
+
+    # DB
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "greenlet>=3.1.0",
+
+    # cache / session state
+    "redis>=5.2.0",
+
+    # auth
+    "pyjwt>=2.10.0",
+    "argon2-cffi>=23.1.0",
+
+    # outbound http / websocket (OpenAI Realtime + Transcriptions)
+    "httpx>=0.28.0",
+    "websockets>=13.1",
+
+    # audio dsp — 프로소디 특징 추출 (numpy 만으로 구현, scipy 불필요)
+    "numpy>=2.1.0",
+
+    # observability
+    "structlog>=24.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+    "aiosqlite>=0.20.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "types-redis>=4.6.0",
+]
+sentry = ["sentry-sdk[fastapi]>=2.19.0"]
+fcm = ["firebase-admin>=6.6.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+# ----------------------------------------------------------------- ruff
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# 마이그레이션은 생성 코드라 스타일 규칙을 적용하지 않는다.
+# .venv 는 git 저장소가 아닌 환경에서도 확실히 제외되도록 명시한다.
+exclude = ["alembic/versions", ".venv", "venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",    # pycodestyle
+    "F",         # pyflakes
+    "I",         # isort
+    "N",         # pep8-naming
+    "UP",        # pyupgrade
+    "B",         # bugbear
+    "C4",        # comprehensions
+    "SIM",       # simplify
+    "ASYNC",     # async gotchas
+    "S",         # bandit
+    # 광범위한 except 는 기본적으로 금지한다. 실시간 자막·경보처럼 "죽으면 안 되는"
+    # 루프에서만 이유를 적고 noqa 로 예외 처리한다.
+    "BLE",
+    "RUF",
+]
+ignore = [
+    "S101",   # assert — 테스트에서 사용
+    "B008",   # FastAPI Depends() 기본값 패턴
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S311"]
+
+# ----------------------------------------------------------------- mypy
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+warn_unreachable = true
+disallow_untyped_decorators = false
+exclude = ["alembic/"]
+
+[[tool.mypy.overrides]]
+module = ["firebase_admin.*"]
+ignore_missing_imports = true
+
+# ----------------------------------------------------------------- pytest
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+# DB 엔진 픽스처가 세션 스코프다. 루프를 함수 스코프로 두면 세션 스코프 async
+# 픽스처를 만드는 순간 pytest-asyncio 가 죽는다 — 테스트가 실패하는 게 아니라
+# 수집 단계에서 에러가 나서, DB 테스트가 통째로 안 돌고 있었다.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/workers/*", "alembic/*"]

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>ko_KR</string>
+	<key>CFBundleDisplayName</key>
+	<string>HearO</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>hearo</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ko</string>
+		<string>en</string>
+	</array>
+
+	<!-- ================= 권한 설명 =================
+	     App Store 심사에서 거절당하지 않으려면 "왜 필요한지"가 구체적이어야 한다.
+	     사용자에게도 이 문구가 그대로 보인다. -->
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>주변 대화를 실시간 자막으로 바꾸고, 화재경보나 사이렌 같은 위급한 소리를 감지해 알려드리기 위해 마이크를 사용합니다. 녹음된 소리는 저장되지 않습니다.</string>
+
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>말소리를 자막으로 변환하기 위해 음성 인식을 사용합니다.</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>위급 상황을 알릴 때 손전등을 깜빡이기 위해 카메라 기능에 접근합니다. 사진이나 영상은 촬영하지 않습니다.</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>대화 기록에 장소를 함께 저장하려면 위치가 필요합니다. 설정에서 언제든 끌 수 있으며, 기본값은 꺼짐입니다.</string>
+
+	<!-- 화면이 잠겨 있어도 경보 알림이 도달해야 한다 -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>processing</string>
+	</array>
+
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+
+	<!-- 운영 빌드는 HTTPS/WSS 만 사용한다. 로컬 개발 시에만 아래를 임시로 켠다. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+	</dict>
+</dict>
+</plist>
